@@ -1,6 +1,6 @@
 import { useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
-import { Float, MeshTransmissionMaterial } from '@react-three/drei'
+import { Float } from '@react-three/drei'
 import { useScroll, useTransform } from 'framer-motion'
 import { Group } from 'three'
 
@@ -25,19 +25,18 @@ export default function Watch() {
     <Float speed={2} rotationIntensity={0.2} floatIntensity={0.2}>
       <group ref={watchRef}>
         {/* Watch case - main body */}
-        <mesh castShadow receiveShadow>
-          <cylinderGeometry args={[1.2, 1.2, 0.4, 64]} />
+        <mesh>
+          <cylinderGeometry args={[1.2, 1.2, 0.4, 32]} />
           <meshStandardMaterial
             color="#D4AF37"
             metalness={1}
             roughness={0.15}
-            envMapIntensity={1.5}
           />
         </mesh>
 
         {/* Watch bezel - outer ring */}
-        <mesh position={[0, 0.21, 0]} castShadow>
-          <torusGeometry args={[1.15, 0.08, 16, 64]} />
+        <mesh position={[0, 0.21, 0]}>
+          <torusGeometry args={[1.15, 0.08, 8, 32]} />
           <meshStandardMaterial
             color="#C5A028"
             metalness={1}
@@ -47,22 +46,20 @@ export default function Watch() {
 
         {/* Watch face - glass crystal */}
         <mesh position={[0, 0.21, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-          <circleGeometry args={[1.1, 64]} />
-          <MeshTransmissionMaterial
-            transmission={0.95}
-            thickness={0.2}
+          <circleGeometry args={[1.1, 32]} />
+          <meshPhysicalMaterial
+            color="#FFFFFF"
+            transmission={0.9}
+            thickness={0.1}
             roughness={0.05}
-            chromaticAberration={0.02}
-            anisotropy={0.1}
-            distortion={0}
-            distortionScale={0}
-            temporalDistortion={0}
+            transparent
+            opacity={0.3}
           />
         </mesh>
 
         {/* Watch dial - face background */}
         <mesh position={[0, 0.19, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-          <circleGeometry args={[1.05, 64]} />
+          <circleGeometry args={[1.05, 32]} />
           <meshStandardMaterial
             color="#0A0A0A"
             metalness={0.3}
@@ -70,8 +67,8 @@ export default function Watch() {
           />
         </mesh>
 
-        {/* Hour markers */}
-        {[...Array(12)].map((_, i) => {
+        {/* Hour markers - only 12, 3, 6, 9 */}
+        {[0, 3, 6, 9].map((i) => {
           const angle = (i * Math.PI) / 6
           const x = Math.cos(angle) * 0.85
           const z = Math.sin(angle) * 0.85
@@ -81,7 +78,7 @@ export default function Watch() {
               position={[x, 0.2, z]}
               rotation={[-Math.PI / 2, 0, angle]}
             >
-              <boxGeometry args={[0.03, 0.12, 0.02]} />
+              <boxGeometry args={[0.04, 0.15, 0.02]} />
               <meshStandardMaterial color="#D4AF37" metalness={1} roughness={0.2} />
             </mesh>
           )
@@ -107,13 +104,13 @@ export default function Watch() {
 
         {/* Center cap */}
         <mesh position={[0, 0.24, 0]}>
-          <cylinderGeometry args={[0.08, 0.08, 0.04, 32]} />
+          <cylinderGeometry args={[0.08, 0.08, 0.04, 16]} />
           <meshStandardMaterial color="#D4AF37" metalness={1} roughness={0.1} />
         </mesh>
 
         {/* Crown */}
-        <mesh position={[1.3, 0, 0]} rotation={[0, 0, Math.PI / 2]} castShadow>
-          <cylinderGeometry args={[0.12, 0.15, 0.3, 32]} />
+        <mesh position={[1.3, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
+          <cylinderGeometry args={[0.12, 0.15, 0.3, 16]} />
           <meshStandardMaterial
             color="#D4AF37"
             metalness={1}
@@ -121,24 +118,12 @@ export default function Watch() {
           />
         </mesh>
 
-        {/* Crown grip lines */}
-        {[...Array(8)].map((_, i) => (
-          <mesh
-            key={i}
-            position={[1.3, 0, 0]}
-            rotation={[0, (i * Math.PI) / 4, Math.PI / 2]}
-          >
-            <boxGeometry args={[0.16, 0.02, 0.02]} />
-            <meshStandardMaterial color="#C5A028" metalness={1} roughness={0.4} />
-          </mesh>
-        ))}
-
         {/* Watch lugs - strap connectors */}
-        <mesh position={[0, 0, 1.4]} castShadow>
+        <mesh position={[0, 0, 1.4]}>
           <boxGeometry args={[0.3, 0.4, 0.2]} />
           <meshStandardMaterial color="#D4AF37" metalness={1} roughness={0.2} />
         </mesh>
-        <mesh position={[0, 0, -1.4]} castShadow>
+        <mesh position={[0, 0, -1.4]}>
           <boxGeometry args={[0.3, 0.4, 0.2]} />
           <meshStandardMaterial color="#D4AF37" metalness={1} roughness={0.2} />
         </mesh>
