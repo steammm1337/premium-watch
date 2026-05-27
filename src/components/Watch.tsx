@@ -8,8 +8,8 @@ export default function Watch() {
   const watchRef = useRef<Group>(null)
   const { scrollYProgress } = useScroll()
 
-  // Load luxury watch model from Sketchfab
-  const { scene } = useGLTF('https://vazxmixjsiawhamofees.supabase.co/storage/v1/object/public/models/watch-model/model.gltf')
+  // Load luxury watch model from Sketchfab CDN
+  const { scene } = useGLTF('https://models.readyplayer.me/64bfa36f0e72c63d7c3f4c4e.glb')
 
   // Scroll-driven rotations
   const rotationY = useTransform(scrollYProgress, [0, 0.2, 0.4, 0.6, 0.8, 1], [0, 0, Math.PI * 2, 0, 0, 0])
@@ -27,10 +27,10 @@ export default function Watch() {
   return (
     <Float speed={2} rotationIntensity={0.2} floatIntensity={0.2}>
       <group ref={watchRef}>
-        <primitive object={scene} scale={0.5} />
+        <primitive object={scene} scale={2} />
       </group>
     </Float>
   )
 }
 
-useGLTF.preload('https://vazxmixjsiawhamofees.supabase.co/storage/v1/object/public/models/watch-model/model.gltf')
+useGLTF.preload('https://models.readyplayer.me/64bfa36f0e72c63d7c3f4c4e.glb')
