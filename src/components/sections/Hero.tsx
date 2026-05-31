@@ -1,33 +1,40 @@
-import { motion, useScroll, useTransform } from 'framer-motion'
+import { useEffect, useRef } from 'react'
+import gsap from 'gsap'
 
 export default function Hero() {
-  const { scrollYProgress } = useScroll()
-  const opacity = useTransform(scrollYProgress, [0, 0.2], [1, 0])
-  const y = useTransform(scrollYProgress, [0, 0.2], [0, -50])
+  const titleRef = useRef<HTMLHeadingElement>(null)
+  const subtitleRef = useRef<HTMLParagraphElement>(null)
+  const descRef = useRef<HTMLParagraphElement>(null)
+  const ctaRef = useRef<HTMLButtonElement>(null)
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.from([titleRef.current, subtitleRef.current, descRef.current, ctaRef.current], {
+        y: 60,
+        opacity: 0,
+        duration: 1.2,
+        stagger: 0.15,
+        ease: 'power3.out',
+        delay: 0.3
+      })
+    })
+    return () => ctx.revert()
+  }, [])
 
   return (
-    <motion.section
-      style={{ opacity, y }}
-      className="hero-section"
-    >
-      <video
-        autoPlay
-        loop
-        muted
-        playsInline
-        className="hero-video"
-        poster="https://images.pexels.com/photos/190819/pexels-photo-190819.jpeg?auto=compress&cs=tinysrgb&w=1920"
-      >
-        <source src="https://player.vimeo.com/external/434045526.sd.mp4?s=c27eecc69a27dbc4ff2b87d38afc35f1a9e7c02d&profile_id=164&oauth2_token_id=57447761" type="video/mp4" />
-      </video>
-      <div className="hero-content">
-        <h1 className="hero-title">CHRONOS ELITE</h1>
-        <p className="hero-subtitle">Swiss Precision Since 1892</p>
-        <p className="hero-description">
-          Handcrafted timepieces that transcend generations. Each watch is a masterpiece
-          of horological excellence, combining traditional craftsmanship with modern innovation.
-        </p>
+    <section className="hero-section">
+      <div className="hero-grid">
+        <div className="hero-content">
+          <h1 ref={titleRef} className="hero-title">CHRONOS ELITE</h1>
+          <p ref={subtitleRef} className="hero-subtitle">Swiss Precision Since 1892</p>
+          <p ref={descRef} className="hero-description">
+            Handcrafted timepieces forged from 18K gold and sapphire crystal.
+            Each watch represents centuries of horological mastery.
+          </p>
+          <button ref={ctaRef} className="hero-cta">Explore Collection</button>
+        </div>
+        <div className="hero-canvas-spacer"></div>
       </div>
-    </motion.section>
+    </section>
   )
 }
